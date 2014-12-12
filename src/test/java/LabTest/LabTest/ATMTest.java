@@ -80,23 +80,7 @@ public class ATMTest {
 		atm.checkBalanse();
 	}
 	
-	@Test 
-	public void getCashCardInATMEnoughtMoneyInATMEnoughtMoneyInAccountDoubleReturns() 
-			throws NoCardInsertedException, NotEnoughMoneyInAccount, NotEnoughMoneyInATM{
-		ATM atm = spy(new ATM(1000));
-		Card card = mock(Card.class);
-		Account account = mock(Account.class);
-		double expectedBalanse = 1000;
-		
-		when(card.checkPin(1111)).thenReturn(true);
-		when(card.isBlocked()).thenReturn(false);
-		when(card.getAccount()).thenReturn(account);
-		when(account.getBalance()).thenReturn(expectedBalanse);
-		assertTrue(atm.validateCard(card, 1111)); 
-		atm.getCash(1000);
-		verify(account,  atLeastOnce()).getBalance();
-		verify(atm,  atLeastOnce()).getMoneyInATM();
-	}
+	
 	
 	@Test (expected = NoCardInsertedException.class)
 	public void getCashNoCardInATMException() 
