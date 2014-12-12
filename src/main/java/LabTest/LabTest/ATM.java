@@ -37,13 +37,18 @@ public class ATM {
 		
 		if (CardInsert == null) 
 			throw new NoCardInsertedException("It's impossible to get cash. Card not exsist");
-		if (checkBalanse() < amount) 
-			throw new NotEnoughMoneyInAccount("Not enought money in account");
+		
 		if (getMoneyInATM() < amount) 
 			throw new NotEnoughMoneyInATM("Not enought money in ATM");
+		if (checkBalanse() < amount) 
+			throw new NotEnoughMoneyInAccount("Not enought money in account");
 		
 		CardInsert.getAccount().withdrow(amount);
+
+		
+		
 		Money -= amount;
+		
 		return CardInsert.getAccount().getBalance();
 	}
     		

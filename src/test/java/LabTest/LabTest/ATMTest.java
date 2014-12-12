@@ -6,6 +6,9 @@
 package LabTest.LabTest;
 
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -80,23 +83,7 @@ public class ATMTest {
 		atm.checkBalanse();
 	}
 	
-	@Test 
-	public void getCashCardInATMEnoughtMoneyInATMEnoughtMoneyInAccountDoubleReturns() 
-			throws NoCardInsertedException, NotEnoughMoneyInAccount, NotEnoughMoneyInATM{
-		ATM atm = spy(new ATM(1000));
-		Card card = mock(Card.class);
-		Account account = mock(Account.class);
-		double expectedBalanse = 1000;
-		
-		when(card.checkPin(1111)).thenReturn(true);
-		when(card.isBlocked()).thenReturn(false);
-		when(card.getAccount()).thenReturn(account);
-		when(account.getBalance()).thenReturn(expectedBalanse);
-		assertTrue(atm.validateCard(card, 1111)); 
-		atm.getCash(1000);
-		verify(account,  atLeastOnce()).getBalance();
-		verify(atm,  atLeastOnce()).getMoneyInATM();
-	}
+
 	
 	@Test (expected = NoCardInsertedException.class)
 	public void getCashNoCardInATMException() 
@@ -139,6 +126,63 @@ public class ATMTest {
 		
 		atm.getCash(5000);
 	}
+	@Test 
+	public void getCashCardInATMEnoughtMoneyInATMEnoughtMoneyInAccountDoubleReturns() 
+			throws NoCardInsertedException, NotEnoughMoneyInAccount, NotEnoughMoneyInATM{
+		ATM atm = spy(new ATM(1000));
+		Card card = mock(Card.class);
+		Account account = mock(Account.class);
+		double expectedBalanse = 1000;
+		
+		when(card.checkPin(1111)).thenReturn(true);
+		when(card.isBlocked()).thenReturn(false);
+		when(card.getAccount()).thenReturn(account);
+		when(account.getBalance()).thenReturn(expectedBalanse);
+		assertTrue(atm.validateCard(card, 1111)); 
+		atm.getCash(1000);
+		verify(account,  atLeastOnce()).getBalance();
+		verify(atm,  atLeastOnce()).getMoneyInATM();
+	}
 	
+	@Test 
+	public void inRightOrder() throws NoCardInsertedException, NotEnoughMoneyInAccount, NotEnoughMoneyInATM
+	{ ATM atm = spy(new ATM(1000));
+	Card card = mock(Card.class);
+	Account account = mock(Account.class);
+	double expectedBalanse = 60;
+	double money=50;
+
+	when(card.checkPin(1111)).thenReturn(true);
+	when(card.isBlocked()).thenReturn(false);
+	when(card.getAccount()).thenReturn(account);
+	when(account.getBalance()).thenReturn(expectedBalanse);
+	when(account.withdrow(money)).thenReturn(money);
+	assertTrue(atm.validateCard(card, 1111)); 
+	atm.getCash(money);
+	InOrder order = Mockito.inOrder(account);
+	order.verify(account).getBalance();
+	order.verify(card.getAccount()).withdrow(money);
+	}
+	@Test 
+	public void inRightOrderThreMethod() throws NoCardInsertedException, NotEnoughMoneyInAccount, NotEnoughMoneyInATM
+	{ 
+	ATM atm = spy(new ATM(1000));
+	Card card = mock(Card.class);
+	Account account = mock(Account.class);
+	double expectedBalanse = 60;
+	double money=50;
+
+	when(card.checkPin(1111)).thenReturn(true);
+	when(card.isBlocked()).thenReturn(false);
+	when(card.getAccount()).thenReturn(account);
+	when(account.getBalance()).thenReturn(expectedBalanse);
+	when(account.withdrow(money)).thenReturn(money);
+	assertTrue(atm.validateCard(card, 1111)); 
+	atm.getCash(money);
+	InOrder order = Mockito.inOrder(atm, account);
+	order.verify(atm).getMoneyInATM();
+	order.verify(account).getBalance();
+	order.verify(card.getAccount()).withdrow(money);
+	}
     
 }
