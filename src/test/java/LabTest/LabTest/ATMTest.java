@@ -83,7 +83,11 @@ public class ATMTest {
 		atm.checkBalanse();
 	}
 	
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 2be7fcb0522b5460f199aff55db350e5c25d2d74
 	
 	@Test (expected = NoCardInsertedException.class)
 	public void getCashNoCardInATMException() 
